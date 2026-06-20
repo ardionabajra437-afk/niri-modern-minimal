@@ -81,8 +81,8 @@ install_paru() {
     # Build paru butuh Rust/Cargo
     sudo pacman -S --needed --noconfirm rust
 
-    # Hapus paru/paru-bin lama yang mungkin broken
-    for pkg in paru paru-bin; do
+    # Hapus paru/paru-bin lama yang mungkin broken (termasuk paket debug-nya)
+    for pkg in paru paru-debug paru-bin paru-bin-debug; do
         if pacman -Qq "$pkg" >/dev/null 2>&1; then
             sudo pacman -Rns --noconfirm "$pkg" || true
         fi
