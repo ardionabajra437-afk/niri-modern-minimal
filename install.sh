@@ -102,7 +102,6 @@ official_pkgs=(
 
     # --- Launcher / Bar / Power menu ---
     fuzzel
-    wlogout
 
     # --- Wallpaper / Screenshot / Clipboard ---
     swaybg
@@ -199,6 +198,7 @@ aur_pkgs=(
     checkupdates-with-aur
     aurutils
     ly
+    wlogout
     fisher-git
     fish-tide-git
 )
