@@ -70,18 +70,36 @@ sudo pacman -S --needed --noconfirm base-devel git curl wget jq
 # Install AUR helper (paru)
 # -----------------------------------------------------------------------------
 install_paru() {
-    if command -v paru >/dev/null 2>&1; then
-        ok "paru sudah terinstall."
+    # Cek apakah paru sudah ada DAN bisa jalan (jangan cuma command -v)
+    if command -v paru >/dev/null 2>&1 && paru -V >/dev/null 2>&1; then
+        ok "paru sudah terinstall dan berfungsi."
         return 0
     fi
 
-    log "Menginstall paru (AUR helper)..."
+    warn "paru rusak/belum terinstall, rebuild dari source AUR..."
+
+    # Build paru butuh Rust/Cargo
+    sudo pacman -S --needed --noconfirm rust
+
+    # Hapus paru/paru-bin lama yang mungkin broken
+    for pkg in paru paru-bin; do
+        if pacman -Qq "$pkg" >/dev/null 2>&1; then
+            sudo pacman -Rns --noconfirm "$pkg" || true
+        fi
+    done
+
+    log "Menginstall paru dari source AUR..."
     local tmpdir
-    tmpdir="$(mktemp -d)"
-    git clone --depth 1 https://aur.archlinux.org/paru-bin.git "$tmpdir/paru-bin"
-    (cd "$tmpdir/paru-bin" && makepkg -si --noconfirm)
+    tmpdir="$(mktemp -d -p /var/tmp)"
+    git clone --depth 1 https://aur.archlinux.org/paru.git "$tmpdir/paru"
+    (cd "$tmpdir/paru" && makepkg -si --noconfirm)
     rm -rf "$tmpdir"
-    ok "paru terinstall."
+
+    if ! paru -V >/dev/null 2>&1; then
+        err "Gagal menginstall paru."
+        exit 1
+    fi
+    ok "paru terinstall dari source."
 }
 install_paru
 
