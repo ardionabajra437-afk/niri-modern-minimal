@@ -206,6 +206,9 @@ official_pkgs=(
     xdg-user-dirs-gtk
     xdg-utils
 
+    # --- Display manager ---
+    ly
+
     # --- Power profile ---
     tuned
     tuned-ppd
@@ -213,7 +216,6 @@ official_pkgs=(
 
 aur_pkgs=(
     tokyonight-gtk-theme-git
-    ly
     wlogout
     fisher-git
     fish-tide-git
@@ -385,7 +387,8 @@ log "Mengaktifkan service sistem..."
 sudo systemctl enable NetworkManager.service
 sudo systemctl enable bluetooth.service
 sudo systemctl enable tuned.service
-sudo systemctl enable ly.service
+sudo systemctl enable ly@tty2.service
+sudo systemctl disable getty@tty2.service || true
 
 log "Mengaktifkan service user (pipewire, wireplumber, dunst)..."
 systemctl --user enable pipewire.socket
