@@ -213,8 +213,6 @@ official_pkgs=(
 
 aur_pkgs=(
     tokyonight-gtk-theme-git
-    checkupdates-with-aur
-    aurutils
     ly
     wlogout
     fisher-git
@@ -240,7 +238,7 @@ EOF
 # Install paket AUR
 # -----------------------------------------------------------------------------
 log "Installing paket dari AUR..."
-paru -S --needed --noconfirm --skipreview "${aur_pkgs[@]}"
+paru -S --needed --noconfirm --skipreview --noprovides "${aur_pkgs[@]}"
 ok "Paket AUR selesai."
 
 # -----------------------------------------------------------------------------
@@ -258,6 +256,18 @@ find "$HOME/.config" -type f \( \
     -o -name "*.jsonc" -o -name "*.conf" -o -name "*.css" -o -name "*.fish" \
     -o -name "*.list" -o -name "layout" \
 \) -exec sed -i 's/\r$//' {} +
+
+# Wrapper checkupdates-with-aur (paket asli tidak ada lagi di AUR)
+log "Membuat wrapper checkupdates-with-aur..."
+mkdir -p "$HOME/.local/bin"
+cat > "$HOME/.local/bin/checkupdates-with-aur" <<'EOF'
+#!/usr/bin/env bash
+# Fallback karena paket checkupdates-with-aur sudah tidak tersedia di AUR
+# Output digabung dari repo official + AUR, cocok untuk waybar-updates.sh
+checkupdates 2>/dev/null
+paru -Qua 2>/dev/null
+EOF
+chmod +x "$HOME/.local/bin/checkupdates-with-aur"
 
 # -----------------------------------------------------------------------------
 # Buat symlink tema (dark sebagai default)
