@@ -167,6 +167,7 @@ official_pkgs=(
 
     # --- GUI apps ---
     firefox
+    flatpak
     pavucontrol
     nautilus
     mousepad
@@ -248,7 +249,7 @@ ok "Paket AUR selesai."
 # -----------------------------------------------------------------------------
 log "Menyalin konfigurasi ke ~/.config..."
 mkdir -p "$HOME/.config"
-cp -aT "$DOTFILES_DIR/.config" "$HOME/.config"
+cp -aT --remove-destination "$DOTFILES_DIR/.config" "$HOME/.config"
 ok "Konfigurasi disalin."
 
 # Bersihkan kemungkinan CRLF kalau file diekstrak dari Windows
